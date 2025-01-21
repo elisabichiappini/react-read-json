@@ -15,6 +15,6 @@
     "nodemon": "^3.1.9"
   },
   "nodeConfig": {
-    "ignore": ["test.html", "users.json"]
+    "ignore": "users.json"
   }
 }
