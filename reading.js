@@ -17,8 +17,12 @@
 const fs = require("fs");
 const path = require("path");
 
-const filePath = path.join(__dirname, "users.json");
-const fileData = fs.readFileSync(filePath, "utf-8");
+const loadData = (nomeFile) => {
+    const filePath = path.join(__dirname, nomeFile + '.json');
+    const fileData = fs.readFileSync(filePath, "utf-8");
+    
+    return JSON.parse(fileData);
+}
 
-const users = JSON.parse(fileData);
-console.log(users);
+const users = loadData('users');
+console.log(users); //[]
