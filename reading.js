@@ -1,9 +1,10 @@
 const dotenv = require("dotenv").config();
+const server = require("http");
 
 const fs = require("fs");
 const path = require("path");
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 const host = process.env.HOST || "localhost";
 
 const readJSONData = (nomeFile) => {
@@ -17,20 +18,38 @@ const writeJSONData = (nomeFile, newData) => {
     const fileString = JSON.stringify(newData);
     fs.writeFileSync(filePath, fileString);
 }
-const server = require("http");
+
 server.createServer((req, res,) => {
-    res.writeHead(200,
-        {
-            "Content-type": "text/html; charset=utf-8"
-        }
-    );
+    
+    const users = readJSONData('users');
     let fileHtml;
     switch(req.url) {
+        case '/favicon.ico': 
+        res.writeHead(404,
+            {
+                "Content-type": "text/html; charset=utf-8"
+            }
+        );
+            res.end();
+        break;
         case '/':
-            const users = readJSONData('users');
+            res.writeHead(200,
+                {
+                    "Content-type": "text/html; charset=utf-8"
+                }
+            );
             fileHtml = '<ul>' 
             users.forEach(u => fileHtml += `<li>${u.name}</li>`);
             fileHtml +='</ul>';
+        break;
+        default: 
+            const name = req.url.slice(1);
+            res.writeHead(301,
+                {
+                    "Location": "/"
+                }
+            );
+            writeJSONData('users', [...users, { name }]);
         break;
     }
     res.end(fileHtml)
